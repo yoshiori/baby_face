@@ -1,3 +1,6 @@
+require "baby_face/configuration"
+require 'pstore'
+
 class BabyFace::Stand
   def initialize(mod)
     @mod = mod
@@ -10,6 +13,7 @@ class BabyFace::Stand
 
         define_method("train_#{category}") {
           bayes.train(category, to_feature)
+          save
         }
       end
     end
@@ -45,9 +49,29 @@ class BabyFace::Stand
     text.split
   end
 
+  def data_path
+    Pathname.new(BabyFace::Configuration.data_dir).join(@mod.class.name.downcase)
+  end
+
+  def pstore
+    @pstore ||= PStore.new(data_path)
+  end
+
+  def save
+    pstore.transaction do
+      pstore[@mod.class.name] = bayes
+    end
+  end
+
   private
   def bayes
     require 'classifier'
-    @@bayes ||= ::Classifier::Bayes.new *@categories
+    @bayes ||= if data_path.exist?
+                 pstore.transaction(true) do
+                   pstore[@mod.class.name]
+                 end
+                else
+                 ::Classifier::Bayes.new *@categories
+                end
   end
 end
