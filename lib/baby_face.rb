@@ -11,33 +11,57 @@ module BabyFace
     )
   end
 
-  def to_feature
-    def scan(prefix, obj)
-      obj.class.class_variable_get(:@@_features).map do |attr|
-        _prefix = prefix.nil? ? attr : "#{prefix}_#{attr}"
-        value = obj.send(attr)
-        case value
-        when BabyFace
-          scan(_prefix, value)
-        when Array
-          value.map do |val|
-            scan(_prefix, val)
-          end
-        when Hash
-          value.map do |key, val|
-            scan("#{_prefix}_#{key}", val)
-          end
-        else
-          wakachi(value.to_s).map do |text|
-            "#{_prefix}_#{text}"
+  class Stand
+    def initialize(mod)
+      @mod = mod
+    end
+
+    def to_feature
+      def scan(prefix, obj)
+        obj.class.class_variable_get(:@@_features).map do |attr|
+          _prefix = prefix.nil? ? attr : "#{prefix}_#{attr}"
+          value = obj.send(attr)
+          case value
+          when BabyFace
+            scan(_prefix, value)
+          when Array
+            value.map do |val|
+              scan(_prefix, val)
+            end
+          when Hash
+            value.map do |key, val|
+              scan("#{_prefix}_#{key}", val)
+            end
+          else
+            wakachi(value.to_s).map do |text|
+              "#{_prefix}_#{text}"
+            end
           end
         end
       end
+      scan(nil, @mod).flatten.join(" ")
     end
-    scan(nil, self).flatten.join(" ")
+
+    def wakachi(text)
+      text.split
+    end
+
+    def train(type)
+      bayes.train(type, to_feature)
+    end
+
+    def maybe
+      bayes.classify(to_feature)
+    end
+
+    private
+    def bayes
+      require 'classifier'
+      @@bayes ||= ::Classifier::Bayes.new 'Light', 'Dark'
+    end
   end
 
-  def wakachi(text)
-    text.split
+  def babyface
+    @babyface ||= BabyFace::Stand.new(self)
   end
 end

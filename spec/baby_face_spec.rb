@@ -3,7 +3,7 @@ require 'baby_face'
 describe BabyFace do
 
   describe "#to_feature" do
-    subject { target.to_feature }
+    subject { target.babyface.to_feature }
 
     class Hoge
       include BabyFace
@@ -58,9 +58,38 @@ describe BabyFace do
         include BabyFace
       end
 
-      let(:baby_face) { Dummy.new }
+      let(:babyface) { Dummy.new.babyface }
 
-      it { expect(baby_face.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
+      it { expect(babyface.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
     end
+  end
+
+  describe "#train" do
+    class Jedi
+      include BabyFace
+      attr_accessor :name
+      acts_as_feature :name
+
+      def initialize(name)
+        @name = name
+      end
+    end
+
+    it 'train spam' do
+      10.times {
+        Jedi.new("Anakin Skywalker").babyface.train("Light")
+      }
+
+      10.times {
+        Jedi.new("Darth Maul").babyface.train("Dark")
+      }
+
+      light_side = Jedi.new("Luke Skywalker")
+      dark_side = Jedi.new("Darth Vader")
+
+      expect(light_side.babyface.maybe).to eq("Light")
+      expect(dark_side.babyface.maybe).to eq("Dark")
+    end
+
   end
 end
