@@ -1,6 +1,6 @@
 require 'baby_face'
 
-describe BabyFace do
+describe BabyFace::Stand do
 
   describe "#to_feature" do
     subject { target.babyface.to_feature }
@@ -8,7 +8,7 @@ describe BabyFace do
     class Hoge
       include BabyFace
       attr_accessor :title, :name
-      acts_as_feature :title, :name
+      acts_as_babyface features: [:title, :name]
 
       def initialize(title: "Revenge of the Sith", name: "Anakin Skywalker")
         @title = title
@@ -19,7 +19,7 @@ describe BabyFace do
     class Bar
       include BabyFace
       attr_accessor :attr1, :attr2
-      acts_as_feature :attr1, :attr2
+      acts_as_babyface features: [:attr1, :attr2]
 
       def initialize(attr1: "foo", attr2: "bar")
         @attr1 = attr1
@@ -56,6 +56,8 @@ describe BabyFace do
     context "default" do
       class Dummy
         include BabyFace
+        attr_accessor :name
+        acts_as_babyface features: :name
       end
 
       let(:babyface) { Dummy.new.babyface }
@@ -68,7 +70,8 @@ describe BabyFace do
     class Jedi
       include BabyFace
       attr_accessor :name
-      acts_as_feature :name
+      acts_as_babyface features: :name,
+                       categories: [:light, :dark]
 
       def initialize(name)
         @name = name
@@ -77,19 +80,18 @@ describe BabyFace do
 
     it 'train spam' do
       10.times {
-        Jedi.new("Anakin Skywalker").babyface.train("Light")
+        Jedi.new("Anakin Skywalker").babyface.train_light
       }
 
       10.times {
-        Jedi.new("Darth Maul").babyface.train("Dark")
+        Jedi.new("Darth Maul").babyface.train_dark
       }
 
       light_side = Jedi.new("Luke Skywalker")
       dark_side = Jedi.new("Darth Vader")
 
-      expect(light_side.babyface.maybe).to eq("Light")
-      expect(dark_side.babyface.maybe).to eq("Dark")
+      expect(light_side.babyface).to be_light
+      expect(dark_side.babyface).to be_dark
     end
-
   end
 end
