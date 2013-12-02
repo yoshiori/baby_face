@@ -53,16 +53,29 @@ describe BabyFace::Stand do
   end
 
   describe "#wakachi" do
-    context "default" do
+
+    context "Default" do
       class Dummy
         include BabyFace
         attr_accessor :name
         acts_as_babyface features: :name
       end
-
       let(:babyface) { Dummy.new.babyface }
 
       it { expect(babyface.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
+    end
+
+    context "Use tokenizer" do
+      class Dummy2
+        include BabyFace
+        attr_accessor :name
+        acts_as_babyface features: :name,
+                         tokenizer: ->(text) {[text.upcase]}
+
+      end
+      let(:babyface) { Dummy2.new.babyface }
+
+      it { expect(babyface.wakachi("aaa bbb")).to eq ["AAA BBB"] }
     end
   end
 

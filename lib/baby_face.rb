@@ -10,6 +10,7 @@ module BabyFace
         categories = *config[:categories]
         mod.class_variable_set(:@@_features, features)
         mod.class_variable_set(:@@_categories, categories)
+        mod.class_variable_set(:@@_tokenizer, config[:tokenizer])
       }
     )
   end

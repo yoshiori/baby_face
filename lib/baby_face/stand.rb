@@ -17,6 +17,7 @@ class BabyFace::Stand
         }
       end
     end
+    @tokenizer = mod.class.class_variable_get(:@@_tokenizer)
   end
 
   def to_feature
@@ -46,7 +47,7 @@ class BabyFace::Stand
   end
 
   def wakachi(text)
-    text.split
+    @tokenizer ? @tokenizer.call(text) : text.split
   end
 
   def save
