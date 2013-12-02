@@ -25,14 +25,13 @@ class BabyFace::Stand
       obj.class.class_variable_get(:@@_features).map do |attr|
         _prefix = prefix.nil? ? attr : "#{prefix}_#{attr}"
         value = obj.send(attr)
-        case value
-        when BabyFace
+        if value.is_a? BabyFace
           scan(_prefix, value)
-        when Array
+        elsif value.is_a? Array
           value.map do |val|
             scan(_prefix, val)
           end
-        when Hash
+        elsif value.is_a? Hash
           value.map do |key, val|
             scan("#{_prefix}_#{key}", val)
           end
@@ -51,8 +50,10 @@ class BabyFace::Stand
   end
 
   def save
+    bayes # Memoization (first access is in transaction)
     pstore.transaction do
       pstore[@mod.class.name] = bayes
+      pstore.commit
     end
   end
 
