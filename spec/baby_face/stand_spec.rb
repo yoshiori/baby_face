@@ -27,25 +27,25 @@ describe BabyFace::Stand do
       end
     end
 
-    context "simple object" do
+    context "Simple object" do
       let(:target) { Hoge.new }
 
       it { should eq "title_Revenge title_of title_the title_Sith name_Anakin name_Skywalker" }
     end
 
-    context "nested object" do
+    context "Nested object" do
       let(:target) { Hoge.new(name: Bar.new) }
 
       it { should eq "title_Revenge title_of title_the title_Sith name_attr1_foo name_attr2_bar" }
     end
 
-    context "nested array" do
+    context "Nested array" do
       let(:target) { Hoge.new(name: [Bar.new, Bar.new]) }
 
       it { should eq "title_Revenge title_of title_the title_Sith name_attr1_foo name_attr2_bar name_attr1_foo name_attr2_bar" }
     end
 
-    context "nested hash" do
+    context "Nested hash" do
       let(:target) { Hoge.new(name: {bar1: Bar.new,bar2: Bar.new}) }
 
       it { should eq "title_Revenge title_of title_the title_Sith name_bar1_attr1_foo name_bar1_attr2_bar name_bar2_attr1_foo name_bar2_attr2_bar" }

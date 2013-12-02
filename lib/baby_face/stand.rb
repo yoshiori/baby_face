@@ -1,5 +1,6 @@
 require "baby_face/configuration"
 require 'pstore'
+require 'classifier'
 
 class BabyFace::Stand
   def initialize(mod)
@@ -13,7 +14,6 @@ class BabyFace::Stand
 
         define_method("train_#{category}") {
           bayes.train(category, to_feature)
-          save
         }
       end
     end
@@ -49,14 +49,6 @@ class BabyFace::Stand
     text.split
   end
 
-  def data_path
-    Pathname.new(BabyFace::Configuration.data_dir).join(@mod.class.name.downcase)
-  end
-
-  def pstore
-    @pstore ||= PStore.new(data_path)
-  end
-
   def save
     pstore.transaction do
       pstore[@mod.class.name] = bayes
@@ -64,14 +56,31 @@ class BabyFace::Stand
   end
 
   private
+  def data_path
+    Pathname.new(BabyFace::Configuration.data_dir).join(@mod.class.name.downcase)
+  end
+
+  def pstore
+    if @mod.class.class_variable_defined?(:@@_pstore)
+      @mod.class.class_variable_get(:@@_pstore)
+    else
+      @mod.class.class_variable_set(:@@_pstore, PStore.new(data_path))
+    end
+  end
+
   def bayes
-    require 'classifier'
-    @bayes ||= if data_path.exist?
-                 pstore.transaction(true) do
-                   pstore[@mod.class.name]
-                 end
-                else
-                 ::Classifier::Bayes.new *@categories
-                end
+    if @mod.class.class_variable_defined?(:@@_bayes)
+      @mod.class.class_variable_get(:@@_bayes)
+    else
+      @mod.class.class_variable_set(:@@_bayes,
+        if data_path.exist?
+          pstore.transaction(true) do
+            pstore[@mod.class.name]
+          end
+        else
+          ::Classifier::Bayes.new *@categories
+        end
+      )
+    end
   end
 end
