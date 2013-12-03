@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "baby_face"
   spec.version       = BabyFace::VERSION
   spec.authors       = ["Yoshiori SHOJI"]
-  spec.email         = ["yoshiori@cookpad.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.email         = ["yoshiori@gmail.com"]
+  spec.description   = "baby_face is a simple machine learning module."
+  spec.summary       = spec.description
+  spec.homepage      = "https://github.com/yoshiori/baby_face"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
