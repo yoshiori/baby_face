@@ -9,7 +9,7 @@ class BabyFace::Stand
     @categories.each do |category|
       self.class.class_eval do
         define_method("#{category}?") {
-          bayes.classify(to_feature).downcase == category.to_s
+          bayes.classify(to_feature).gsub(" ", "_").downcase == category.to_s
         }
 
         define_method("train_#{category}") {
@@ -59,7 +59,11 @@ class BabyFace::Stand
 
   private
   def data_path
-    Pathname.new(BabyFace.configuration.data_dir).join(@mod.class.name.downcase) if BabyFace.configuration.data_dir
+    if BabyFace.configuration.data_dir
+      Pathname.new(BabyFace.configuration.data_dir).join("#{@mod.class.name.downcase}.babyface")
+    else
+      Pathname.new("#{@mod.class.name.downcase}.babyface")
+    end
   end
 
   def pstore

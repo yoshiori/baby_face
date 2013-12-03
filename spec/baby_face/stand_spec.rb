@@ -53,7 +53,6 @@ describe BabyFace::Stand do
   end
 
   describe "#wakachi" do
-
     context "Default" do
       class Dummy
         include BabyFace
@@ -84,27 +83,27 @@ describe BabyFace::Stand do
       include BabyFace
       attr_accessor :name
       acts_as_babyface features: :name,
-                       categories: [:light, :dark]
+                       categories: [:light_side, :dark_side]
 
       def initialize(name)
         @name = name
       end
     end
 
-    it 'train spam' do
+    it 'train jedi' do
       10.times {
-        Jedi.new("Anakin Skywalker").babyface.train_light
+        Jedi.new("Anakin Skywalker").babyface.train_light_side
       }
 
       10.times {
-        Jedi.new("Darth Maul").babyface.train_dark
+        Jedi.new("Darth Maul").babyface.train_dark_side
       }
 
-      light_side = Jedi.new("Luke Skywalker")
-      dark_side = Jedi.new("Darth Vader")
+      luke = Jedi.new("Luke Skywalker")
+      vader = Jedi.new("Darth Vader")
 
-      expect(light_side.babyface).to be_light
-      expect(dark_side.babyface).to be_dark
+      expect(luke.babyface).to be_light_side
+      expect(vader.babyface).to be_dark_side
     end
   end
 end
