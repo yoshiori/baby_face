@@ -1,4 +1,4 @@
-require 'baby_face'
+require "baby_face"
 
 describe BabyFace::Stand do
 
@@ -80,15 +80,6 @@ describe BabyFace::Stand do
   end
 
   describe "#train" do
-    before do
-      require "tmpdir"
-      BabyFace::Configuration.data_dir = Dir.mktmpdir
-    end
-
-    after do
-      FileUtils.remove_entry_secure BabyFace::Configuration.data_dir
-    end
-
     class Jedi
       include BabyFace
       attr_accessor :name

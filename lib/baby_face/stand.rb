@@ -59,7 +59,7 @@ class BabyFace::Stand
 
   private
   def data_path
-    Pathname.new(BabyFace::Configuration.data_dir).join(@mod.class.name.downcase)
+    Pathname.new(BabyFace.configuration.data_dir).join(@mod.class.name.downcase) if BabyFace.configuration.data_dir
   end
 
   def pstore
@@ -75,7 +75,7 @@ class BabyFace::Stand
       @mod.class.class_variable_get(:@@_bayes)
     else
       @mod.class.class_variable_set(:@@_bayes,
-        if data_path.exist?
+        if data_path && data_path.exist?
           pstore.transaction(true) do
             pstore[@mod.class.name]
           end

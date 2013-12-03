@@ -1,7 +1,13 @@
 require "baby_face/stand"
+require "baby_face/configuration"
 require "baby_face/version"
 
 module BabyFace
+
+  def self.configuration
+    @configuration ||= Configuration.instance
+  end
+
   def BabyFace.included(mod)
     mod.define_singleton_method(
       :acts_as_babyface,
