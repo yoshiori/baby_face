@@ -10,7 +10,7 @@ module BabyFace
 
   def BabyFace.included(mod)
     mod.define_singleton_method(
-      :acts_as_babyface,
+      :baby_face_for,
       lambda { |config|
         features = *config[:features]
         categories = *config[:categories]
@@ -21,7 +21,7 @@ module BabyFace
     )
   end
 
-  def babyface
-    @_babyface ||= BabyFace::Stand.new(self)
+  def baby_face
+    @_baby_face ||= BabyFace::Stand.new(self)
   end
 end

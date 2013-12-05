@@ -24,8 +24,8 @@ Or install it yourself as:
 ```ruby
 class Jedi
   include BabyFace
-  acts_as_babyface features: :name,
-                   categories: [:light_side, :dark_side]
+  baby_face_for features: :name,
+                categories: [:light_side, :dark_side]
 
   attr_accessor :name
   def initialize(name)
@@ -37,22 +37,22 @@ end
 ### training
 
 ```ruby
-Jedi.new("Anakin Skywalker").babyface.train_light_side
-Jedi.new("Darth Maul").babyface.train_dark_side
+Jedi.new("Anakin Skywalker").baby_face.train_light_side
+Jedi.new("Darth Maul").baby_face.train_dark_side
 ```
 
 ### classify
 
 ```ruby
-Jedi.new("Luke Skywalker").babyface.light_side? # => true
-Jedi.new("Darth Vader").babyface.dark_side? # => true
+Jedi.new("Luke Skywalker").baby_face.light_side? # => true
+Jedi.new("Darth Vader").baby_face.dark_side? # => true
 ```
 
 ### save training data
 
 ```ruby
 BabyFace.configuration.data_dir = "/tmp/baby_face"
-Jedi.new("Luke Skywalker").babyface.save # => /tmp/baby_face/jedi.babyface
+Jedi.new("Luke Skywalker").baby_face.save # => /tmp/baby_face/jedi.babyface
 ```
 
 
@@ -61,9 +61,9 @@ Jedi.new("Luke Skywalker").babyface.save # => /tmp/baby_face/jedi.babyface
 default : String#split
 
 ```ruby
-acts_as_babyface features: :name,
-                 categories: [:ham, :spam],
-                 tokenizer: ->(text) {[text.upcase]}
+baby_face_for features: :name,
+              categories: [:ham, :spam],
+              tokenizer: ->(text) {[text.upcase]}
 
 ```
 
@@ -74,13 +74,13 @@ support nested BabyFace object, array and hash.
 class Entry < ActiveRecord::Base
   has_many :comments
   include BabyFace
-  acts_as_babyface features: :title, :body, :comments,
-                   categories: [:ham, :spam]
+  baby_face_for features: :title, :body, :comments,
+                categories: [:ham, :spam]
 end
 
 class Comment < ActiveRecord::Base
   include BabyFace
-  acts_as_babyface features: :title, :message
+  baby_face_for features: :title, :message
 end
 ```
 

@@ -3,12 +3,12 @@ require "baby_face"
 describe BabyFace::Stand do
 
   describe "#to_feature" do
-    subject { target.babyface.to_feature }
+    subject { target.baby_face.to_feature }
 
     class Hoge
       include BabyFace
       attr_accessor :title, :name
-      acts_as_babyface features: [:title, :name]
+      baby_face_for features: [:title, :name]
 
       def initialize(title: "Revenge of the Sith", name: "Anakin Skywalker")
         @title = title
@@ -19,7 +19,7 @@ describe BabyFace::Stand do
     class Bar
       include BabyFace
       attr_accessor :attr1, :attr2
-      acts_as_babyface features: [:attr1, :attr2]
+      baby_face_for features: [:attr1, :attr2]
 
       def initialize(attr1: "foo", attr2: "bar")
         @attr1 = attr1
@@ -57,24 +57,24 @@ describe BabyFace::Stand do
       class Dummy
         include BabyFace
         attr_accessor :name
-        acts_as_babyface features: :name
+        baby_face_for features: :name
       end
-      let(:babyface) { Dummy.new.babyface }
+      let(:baby_face) { Dummy.new.baby_face }
 
-      it { expect(babyface.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
+      it { expect(baby_face.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
     end
 
     context "Use tokenizer" do
       class Dummy2
         include BabyFace
         attr_accessor :name
-        acts_as_babyface features: :name,
+        baby_face_for features: :name,
                          tokenizer: ->(text) {[text.upcase]}
 
       end
-      let(:babyface) { Dummy2.new.babyface }
+      let(:baby_face) { Dummy2.new.baby_face }
 
-      it { expect(babyface.wakachi("aaa bbb")).to eq ["AAA BBB"] }
+      it { expect(baby_face.wakachi("aaa bbb")).to eq ["AAA BBB"] }
     end
   end
 
@@ -82,7 +82,7 @@ describe BabyFace::Stand do
     class Jedi
       include BabyFace
       attr_accessor :name
-      acts_as_babyface features: :name,
+      baby_face_for features: :name,
                        categories: [:light_side, :dark_side]
 
       def initialize(name)
@@ -92,18 +92,18 @@ describe BabyFace::Stand do
 
     it 'train jedi' do
       10.times {
-        Jedi.new("Anakin Skywalker").babyface.train_light_side
+        Jedi.new("Anakin Skywalker").baby_face.train_light_side
       }
 
       10.times {
-        Jedi.new("Darth Maul").babyface.train_dark_side
+        Jedi.new("Darth Maul").baby_face.train_dark_side
       }
 
       luke = Jedi.new("Luke Skywalker")
       vader = Jedi.new("Darth Vader")
 
-      expect(luke.babyface).to be_light_side
-      expect(vader.babyface).to be_dark_side
+      expect(luke.baby_face).to be_light_side
+      expect(vader.baby_face).to be_dark_side
     end
   end
 end
