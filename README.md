@@ -1,6 +1,6 @@
 # BabyFace
 
-baby_face is a simple machine learning module.
+baby_face is a mix-in module to provide a simple classifier.
 
 ![](http://farm3.staticflickr.com/2835/11172696593_2e98d981d0_o.jpg)
 
