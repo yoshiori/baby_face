@@ -74,13 +74,13 @@ support nested BabyFace object, array and hash.
 class Entry < ActiveRecord::Base
   has_many :comments
   include BabyFace
-  baby_face_for features: :title, :body, :comments,
+  baby_face_for features: [:title, :body, :comments],
                 categories: [:ham, :spam]
 end
 
 class Comment < ActiveRecord::Base
   include BabyFace
-  baby_face_for features: :title, :message
+  baby_face_for features: [:title, :message]
 end
 ```
 
