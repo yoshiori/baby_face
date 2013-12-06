@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = BabyFace::VERSION
   spec.authors       = ["Yoshiori SHOJI"]
   spec.email         = ["yoshiori@gmail.com"]
-  spec.description   = "baby_face is a simple machine learning module."
+  spec.description   = "baby_face is a mix-in module to provide a simple classifier."
   spec.summary       = spec.description
   spec.homepage      = "https://github.com/yoshiori/baby_face"
   spec.license       = "MIT"
