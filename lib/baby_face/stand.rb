@@ -45,10 +45,6 @@ class BabyFace::Stand
     scan(nil, @mod).flatten.join(" ")
   end
 
-  def wakachi(text)
-    @tokenizer ? @tokenizer.call(text) : text.split
-  end
-
   def save
     bayes # Memoization (first access is in transaction)
     pstore.transaction do
@@ -58,6 +54,10 @@ class BabyFace::Stand
   end
 
   private
+  def wakachi(text)
+    @tokenizer ? @tokenizer.call(text) : text.split
+  end
+
   def data_path
     if BabyFace.configuration.data_dir
       Pathname.new(BabyFace.configuration.data_dir).join("#{@mod.class.name.downcase}.babyface")

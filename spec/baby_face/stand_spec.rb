@@ -61,7 +61,7 @@ describe BabyFace::Stand do
       end
       let(:baby_face) { Dummy.new.baby_face }
 
-      it { expect(baby_face.wakachi("aaa bbb")).to eq ["aaa", "bbb"] }
+      it { expect(baby_face.send(:wakachi, "aaa bbb")).to eq ["aaa", "bbb"] }
     end
 
     context "Use tokenizer" do
@@ -74,7 +74,7 @@ describe BabyFace::Stand do
       end
       let(:baby_face) { Dummy2.new.baby_face }
 
-      it { expect(baby_face.wakachi("aaa bbb")).to eq ["AAA BBB"] }
+      it { expect(baby_face.send(:wakachi, "aaa bbb")).to eq ["AAA BBB"] }
     end
   end
 
