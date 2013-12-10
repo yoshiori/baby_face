@@ -30,25 +30,25 @@ describe BabyFace::Stand do
     context "Simple object" do
       let(:target) { Hoge.new }
 
-      it { should eq "title_Revenge title_of title_the title_Sith name_Anakin name_Skywalker" }
+      it { should eq "t_Revenge t_of t_the t_Sith n_Anakin n_Skywalker" }
     end
 
     context "Nested object" do
       let(:target) { Hoge.new(name: Bar.new) }
 
-      it { should eq "title_Revenge title_of title_the title_Sith name_attr1_foo name_attr2_bar" }
+      it { should eq "t_Revenge t_of t_the t_Sith n_a_foo n_a2_bar" }
     end
 
     context "Nested array" do
       let(:target) { Hoge.new(name: [Bar.new, Bar.new]) }
 
-      it { should eq "title_Revenge title_of title_the title_Sith name_attr1_foo name_attr2_bar name_attr1_foo name_attr2_bar" }
+      it { should eq "t_Revenge t_of t_the t_Sith n_a_foo n_a2_bar n_a_foo n_a2_bar" }
     end
 
     context "Nested hash" do
       let(:target) { Hoge.new(name: {bar1: Bar.new,bar2: Bar.new}) }
 
-      it { should eq "title_Revenge title_of title_the title_Sith name_bar1_attr1_foo name_bar1_attr2_bar name_bar2_attr1_foo name_bar2_attr2_bar" }
+      it { should eq "t_Revenge t_of t_the t_Sith n_b_a_foo n_b_a2_bar n_b2_a_foo n_b2_a2_bar" }
     end
   end
 
@@ -69,12 +69,22 @@ describe BabyFace::Stand do
         include BabyFace
         attr_accessor :name
         baby_face_for features: :name,
-                         tokenizer: ->(text) {[text.upcase]}
+                      tokenizer: ->(text) {[text.upcase]}
 
       end
       let(:baby_face) { Dummy2.new.baby_face }
 
       it { expect(baby_face.send(:wakachi, "aaa bbb")).to eq ["AAA BBB"] }
+    end
+  end
+
+  describe "#short_keys" do
+    context "first letter is not collision" do
+      it { expect(BabyFace::Stand.short_keys(:name, :title, :body)).to eq({name: "n", title: "t", body: "b"}) }
+    end
+
+    context "first letter is collision" do
+      it { expect(BabyFace::Stand.short_keys(:name, :title, :body, :task_name)).to eq({name: "n", task_name: "t", title: "t2", body: "b"}) }
     end
   end
 

@@ -23,7 +23,8 @@ class BabyFace::Stand
   def to_feature
     def scan(prefix, obj)
       obj.class.class_variable_get(:@@_features).map do |attr|
-        _prefix = prefix.nil? ? attr : "#{prefix}_#{attr}"
+        short_key = obj.baby_face.send(:short_keys)[attr]
+        _prefix = prefix.nil? ? short_key : "#{prefix}_#{short_key}"
         value = obj.send(attr)
         if value.is_a? BabyFace
           scan(_prefix, value)
@@ -32,8 +33,10 @@ class BabyFace::Stand
             scan(_prefix, val)
           end
         elsif value.is_a? Hash
+          _short_keys = BabyFace::Stand.short_keys(*value.keys)
           value.map do |key, val|
-            scan("#{_prefix}_#{key}", val)
+            _key = _short_keys[key]
+            scan("#{_prefix}_#{_key}", val)
           end
         else
           wakachi(value.to_s).map do |text|
@@ -53,7 +56,31 @@ class BabyFace::Stand
     end
   end
 
+  def self.short_keys(*attrs)
+    Hash[attrs.sort.zip(
+        attrs.sort.reduce([]) do |ary, attr|
+          first_letter = attr.to_s.chars.first
+          short_key = first_letter
+          count = 1
+          while ary.include? short_key
+            count += 1
+            short_key = "#{first_letter}#{count}"
+          end
+          ary << short_key
+        end
+    )]
+  end
+
   private
+  def short_keys
+    if @mod.class.class_variable_defined?(:@@_short_keys)
+      @mod.class.class_variable_get(:@@_short_keys)
+    else
+      @mod.class.class_variable_set(:@@_short_keys,
+        BabyFace::Stand.short_keys(*@mod.class.class_variable_get(:@@_features)))
+    end
+  end
+
   def wakachi(text)
     @tokenizer ? @tokenizer.call(text) : text.split
   end
