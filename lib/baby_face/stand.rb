@@ -20,6 +20,10 @@ class BabyFace::Stand
     @tokenizer = mod.class.class_variable_get(:@@_tokenizer)
   end
 
+  def classifications
+    bayes.classifications(to_feature)
+  end
+
   def to_feature
     def scan(prefix, obj)
       obj.class.class_variable_get(:@@_features).map do |attr|
